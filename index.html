@@ -193,7 +193,16 @@ body[data-active="fin"] .q-num{color:var(--green);}
 .pbtn[data-p="portal"]:hover{border-color:#ff2e88;
   box-shadow:0 0 36px rgba(255,46,136,0.35),inset 0 0 22px rgba(255,46,136,0.06);}
 .pbtn[data-p="portal"] .name{color:#ff5ea8;}
-.portal-flower img{width:110px;height:auto;filter:drop-shadow(0 0 16px rgba(255,46,136,0.45));
+.portal-flower{position:relative;display:inline-flex;align-items:center;justify-content:center;isolation:isolate;}
+.portal-flower::before{content:'';position:absolute;inset:-24%;z-index:-1;border-radius:50%;
+  background:radial-gradient(circle,rgba(79,157,248,.26),transparent 68%);
+  filter:blur(12px);pointer-events:none;animation:flowerGlow 10s ease-in-out infinite;}
+@keyframes flowerGlow{
+  0%,18%,36%,54%,72%,100%{background:radial-gradient(circle,rgba(79,157,248,.26),transparent 68%);opacity:.85;}
+  80%{background:radial-gradient(circle,rgba(255,75,105,.22),transparent 68%);opacity:.7;}
+  90%{background:radial-gradient(circle,rgba(45,255,126,.20),transparent 68%);opacity:.7;}
+}
+.portal-flower img{width:110px;height:auto;filter:drop-shadow(0 0 12px rgba(79,157,248,0.25));
   animation:flowerSpin 14s linear infinite;}
 @keyframes flowerSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 .portal-logo{background:rgba(255,255,255,0.92);border-radius:12px;padding:8px 14px;
@@ -270,7 +279,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
 .about-person{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 14px;
   background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
   border-radius:16px;padding:18px 20px;margin:0 2px;}
-.about-person .p-name{font-family:'Khaybar 3D','Amiri',serif;font-size:1.35rem;font-weight:900;
+.about-person .p-name{font-family:'Zain',sans-serif;font-size:1.35rem;font-weight:900;
   color:#2dff7e;filter:drop-shadow(0 0 10px rgba(45,255,126,0.35));}
 .about-person:last-of-type .p-name{color:#4f9df8;filter:drop-shadow(0 0 10px rgba(79,157,248,0.35));}
 .about-person .p-role{color:#c6d4e8;font-family:'Zain',sans-serif;font-size:.98rem;line-height:1.7;}
@@ -289,6 +298,13 @@ body[data-active="fin"] .q-num{color:var(--green);}
   background:rgba(45,255,126,.1);border:1px solid rgba(45,255,126,.5);color:#2dff7e;
   font-size:1.5rem;cursor:pointer;box-shadow:0 0 18px rgba(45,255,126,.15);}
 .about-next:hover{background:rgba(45,255,126,.2);}
+.about-next svg{width:24px;height:24px;}
+.guess-submit{display:block;margin:18px auto 0;padding:9px 28px;border-radius:12px;
+  background:rgba(45,255,126,.12);border:1px solid rgba(45,255,126,.5);color:#9fffc1;
+  font:700 1rem 'Zain',sans-serif;cursor:pointer;}
+.guess-submit:hover{background:rgba(45,255,126,.22);}
+.guess-error{color:#ffc4c4;font-size:.95rem;margin-top:8px;}
+#evidenceResult{overflow-wrap:anywhere;}
 .guess-description{font-size:1rem;line-height:1.8;color:#dce8f5;margin-bottom:18px;}
 .guess-input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid rgba(45,255,126,.4);
   background:rgba(0,0,0,.3);color:#fff;font:1rem 'Zain',sans-serif;text-align:right;}
@@ -483,21 +499,22 @@ body[data-active="fin"] .q-num{color:var(--green);}
       <span class="p-name">العميل ج.ج</span>
       <span class="p-role">مؤسس شركة Data X و المدير القائم على منصة Qworld</span>
     </div>
-    <button type="button" class="about-next" id="showGuess" aria-label="انتقل إلى من أنت؟">←</button>
+    <button type="button" class="about-next" id="showGuess" aria-label="انتقل إلى من أنت؟"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
     </div>
     <div id="guessView" hidden>
       <h2 class="about-title" id="guessTitle">من أنت؟</h2>
       <div id="guessStep">
         <p class="guess-description">لو انت في نفس مدارسنا خمّن أسماءنا صح و اكسب هدية!!</p>
-        <input class="guess-input" id="guessInput" type="text" placeholder="اكتب اللي تعرفه" aria-label="اكتب اللي تعرفه" autocomplete="off">
+        <input class="guess-input" id="guessInput" type="text" placeholder="اكتب اللي تعرفه" aria-label="اكتب اللي تعرفه" aria-describedby="guessError" autocomplete="off">
+        <p class="guess-error" id="guessError" role="status" hidden>الاسم مش صحيح، جرّب تاني.</p>
+        <button type="button" class="guess-submit" id="submitGuess">تأكيد الاسم</button>
       </div>
       <div id="evidenceStep" hidden>
         <label class="guess-description" for="evidenceInput" style="display:block">اذكر الدليل لإثبات اتهامك للشخص ده</label>
         <textarea class="guess-input" id="evidenceInput" rows="3" placeholder="اعتبره JRE . . ."></textarea>
-        <button type="button" class="about-next" id="submitEvidence" aria-label="تأكيد الدليل">←</button>
+        <button type="button" class="guess-submit" id="submitEvidence">إدخال الدليل</button>
       </div>
-      <p class="guess-description" id="evidenceResult" role="status" tabindex="-1" hidden>الدليل مش كافي</p>
-      <button type="button" class="about-next" id="showPeople" aria-label="العودة إلى من نحن">→</button>
+      <p class="guess-description" id="evidenceResult" role="status" tabindex="-1" hidden>الدليل مش كافي<br>#مع_نفسك_محدش_فينا_عارفك</p>
     </div>
   </div>
 </div>
@@ -707,18 +724,22 @@ function renderContent(){
   const evidenceInput=document.getElementById('evidenceInput'),evidenceResult=document.getElementById('evidenceResult');
   document.getElementById('submitEvidence').addEventListener('click',()=>{
     if(!evidenceInput.value.trim()){evidenceInput.focus();return;}
-    evidenceStep.hidden=true;evidenceResult.hidden=false;evidenceResult.focus();
+    evidenceStep.hidden=true;evidenceResult.hidden=false;document.getElementById('guessTitle').textContent='ليه كده ؟';evidenceResult.focus();
   });
-  guessInput.addEventListener('input',()=>{
+  const guessError=document.getElementById('guessError');
+  function submitGuess(){
     const answer=guessInput.value.trim();
     if(answer==='جاسر'||answer==='عمرو'){
-      guessStep.hidden=true;evidenceStep.hidden=false;
-      document.getElementById('evidenceInput').focus();
+      guessError.hidden=true;guessStep.hidden=true;evidenceStep.hidden=false;evidenceInput.focus();
+    }else{
+      guessError.hidden=false;guessInput.focus();
     }
-  });
+  }
+  document.getElementById('submitGuess').addEventListener('click',submitGuess);
+  guessInput.addEventListener('input',()=>{guessError.hidden=true;});
+  guessInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submitGuess();}});
   document.getElementById('showGuess').addEventListener('click',()=>showGuessView(true));
-  document.getElementById('showPeople').addEventListener('click',()=>showGuessView(false));
-  const open=()=>{try{playLaser();}catch(e){} opener=document.activeElement;overlay.inert=false;overlay.setAttribute('aria-hidden','false');overlay.classList.add('open');document.getElementById('aboutClose').focus();};
+  const open=()=>{people.hidden=false;guess.hidden=true;guessStep.hidden=false;evidenceStep.hidden=true;evidenceResult.hidden=true;guessError.hidden=true;guessInput.value='';evidenceInput.value='';document.getElementById('guessTitle').textContent='من أنت؟';modal.setAttribute('aria-labelledby','aboutTitle');try{playLaser();}catch(e){} opener=document.activeElement;overlay.inert=false;overlay.setAttribute('aria-hidden','false');overlay.classList.add('open');document.getElementById('aboutClose').focus();};
   const close=()=>{try{playClick();}catch(e){} overlay.classList.remove('open');overlay.inert=true;overlay.setAttribute('aria-hidden','true');if(opener)opener.focus();};
   document.getElementById('aboutFab').addEventListener('click',()=>{
     try{if(typeof playClick==='function')playClick();}catch(e){}
@@ -735,10 +756,8 @@ function renderContent(){
     homeExtra.inert=!isOpen;homeExtra.setAttribute('aria-hidden',String(!isOpen));
   });
   document.getElementById('aboutClose').addEventListener('click',close);
-  overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
   addEventListener('keydown',e=>{
     if(!overlay.classList.contains('open'))return;
-    if(e.key==='Escape')close();
     if(e.key==='Tab'){
       const focusable=Array.from(modal.querySelectorAll('button, input, textarea')).filter(el=>!el.closest('[hidden]'));
       const first=focusable[0],last=focusable[focusable.length-1];
