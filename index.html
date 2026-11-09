@@ -207,20 +207,20 @@ body[data-active="fin"] .q-num{color:var(--green);}
 
 
 /* ── العنوان الرئيسي ── */
-.main-title{font-family:'Break Brush','Game Over','Zain',sans-serif;text-align:center;
+.main-title{font-family:'Break Brush','Game Over','Zain',sans-serif;font-weight:400;text-align:center;
   letter-spacing:.005em;line-height:1.2;white-space:normal;
   padding:16px 10px 4px;margin-bottom:10px;
-  background:linear-gradient(180deg,#ffec8c 0%,#ffc828 45%,#ff8c1e 80%,#ff5a1e 100%);
+  background:linear-gradient(180deg,#d5ffe4 0%,#67ff9d 45%,#2dff7e 80%,#00d95d 100%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 16px rgba(255,180,30,0.6)) drop-shadow(0 0 46px rgba(255,110,20,0.35));
+  filter:drop-shadow(0 0 16px rgba(45,255,126,0.6)) drop-shadow(0 0 46px rgba(0,217,93,0.35));
   animation:titleGlow 3.2s ease-in-out infinite alternate;}
 .main-title .t-line1{display:block;white-space:nowrap;
   font-size:clamp(1.8rem,10.6vw,7.5rem);line-height:1;}
 .main-title .t-line2{display:block;white-space:nowrap;
   font-size:clamp(2.6rem,15vw,11rem);line-height:1;
   margin-top:-.02em;}
-@keyframes titleGlow{from{filter:drop-shadow(0 0 12px rgba(255,200,40,0.5)) drop-shadow(0 0 30px rgba(255,110,20,0.3));}
-  to{filter:drop-shadow(0 0 20px rgba(255,200,40,0.75)) drop-shadow(0 0 52px rgba(255,110,20,0.5));}}
+@keyframes titleGlow{from{filter:drop-shadow(0 0 12px rgba(45,255,126,0.5)) drop-shadow(0 0 30px rgba(0,217,93,0.3));}
+  to{filter:drop-shadow(0 0 20px rgba(45,255,126,0.75)) drop-shadow(0 0 52px rgba(0,217,93,0.5));}}
 
 /* ── بلوك التنويه الأحمر (أسفل الصفحة) ── */
 .disclaimer-box{max-width:640px;margin:10px auto 0;background:rgba(220,38,38,0.10);
@@ -270,7 +270,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
 .about-person{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 14px;
   background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
   border-radius:16px;padding:18px 20px;margin:0 2px;}
-.about-person .p-name{font-family:'Kodak Bold','Zain',sans-serif;font-size:1.35rem;font-weight:900;
+.about-person .p-name{font-family:'Khaybar 3D','Amiri',serif;font-size:1.35rem;font-weight:900;
   color:#2dff7e;filter:drop-shadow(0 0 10px rgba(45,255,126,0.35));}
 .about-person:last-of-type .p-name{color:#4f9df8;filter:drop-shadow(0 0 10px rgba(79,157,248,0.35));}
 .about-person .p-role{color:#c6d4e8;font-family:'Zain',sans-serif;font-size:.98rem;line-height:1.7;}
@@ -284,6 +284,16 @@ body[data-active="fin"] .q-num{color:var(--green);}
   font-family:'Khaybar 3D','Zain',serif;font-size:1.05rem;
   box-shadow:0 0 16px rgba(199,146,234,0.25),inset 0 0 12px rgba(199,146,234,0.08);
   filter:drop-shadow(0 0 10px rgba(199,146,234,0.35));}
+
+.about-next{display:grid;place-items:center;width:48px;height:48px;margin:22px auto 0;border-radius:50%;
+  background:rgba(45,255,126,.1);border:1px solid rgba(45,255,126,.5);color:#2dff7e;
+  font-size:1.5rem;cursor:pointer;box-shadow:0 0 18px rgba(45,255,126,.15);}
+.about-next:hover{background:rgba(45,255,126,.2);}
+.guess-description{font-size:1rem;line-height:1.8;color:#dce8f5;margin-bottom:18px;}
+.guess-input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid rgba(45,255,126,.4);
+  background:rgba(0,0,0,.3);color:#fff;font:1rem 'Zain',sans-serif;text-align:right;}
+.guess-input::placeholder{color:#9fb3cf;opacity:.75;}
+.guess-input:focus-visible{outline:3px solid #fff;outline-offset:3px;}
 
 .about-close{position:absolute;top:14px;left:14px;width:38px;height:38px;border-radius:12px;
   display:grid;place-items:center;background:rgba(255,255,255,0.06);
@@ -457,6 +467,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
     <button class="about-close" id="aboutClose" aria-label="إغلاق">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
     </button>
+    <div id="aboutPeople">
     <h2 class="about-title" id="aboutTitle">من نحن ؟</h2>
     <div class="about-lead">هذا العمل من إعداد</div>
     <div class="about-person">
@@ -471,6 +482,22 @@ body[data-active="fin"] .q-num{color:var(--green);}
     <div class="about-person">
       <span class="p-name">العميل ج.ج</span>
       <span class="p-role">مؤسس شركة Data X و المدير القائم على منصة Qworld</span>
+    </div>
+    <button type="button" class="about-next" id="showGuess" aria-label="انتقل إلى من أنت؟">←</button>
+    </div>
+    <div id="guessView" hidden>
+      <h2 class="about-title" id="guessTitle">من أنت؟</h2>
+      <div id="guessStep">
+        <p class="guess-description">لو انت في نفس مدارسنا خمّن أسماءنا صح و اكسب هدية!!</p>
+        <input class="guess-input" id="guessInput" type="text" placeholder="اكتب اللي تعرفه" aria-label="اكتب اللي تعرفه" autocomplete="off">
+      </div>
+      <div id="evidenceStep" hidden>
+        <label class="guess-description" for="evidenceInput" style="display:block">اذكر الدليل لإثبات اتهامك للشخص ده</label>
+        <textarea class="guess-input" id="evidenceInput" rows="3" placeholder="اعتبره JRE . . ."></textarea>
+        <button type="button" class="about-next" id="submitEvidence" aria-label="تأكيد الدليل">←</button>
+      </div>
+      <p class="guess-description" id="evidenceResult" role="status" tabindex="-1" hidden>الدليل مش كافي</p>
+      <button type="button" class="about-next" id="showPeople" aria-label="العودة إلى من نحن">→</button>
     </div>
   </div>
 </div>
@@ -668,6 +695,29 @@ function renderContent(){
 (function(){
   const overlay=document.getElementById('aboutOverlay');
   let opener=null;
+  const people=document.getElementById('aboutPeople'),guess=document.getElementById('guessView');
+  const modal=overlay.querySelector('.about-modal');
+  function showGuessView(show){
+    people.hidden=show;guess.hidden=!show;
+    modal.setAttribute('aria-labelledby',show?'guessTitle':'aboutTitle');
+    (show?(!evidenceResult.hidden?evidenceResult:evidenceStep.hidden?guessInput:document.getElementById('evidenceInput')):document.getElementById('showGuess')).focus();
+  }
+  const guessInput=document.getElementById('guessInput');
+  const guessStep=document.getElementById('guessStep'),evidenceStep=document.getElementById('evidenceStep');
+  const evidenceInput=document.getElementById('evidenceInput'),evidenceResult=document.getElementById('evidenceResult');
+  document.getElementById('submitEvidence').addEventListener('click',()=>{
+    if(!evidenceInput.value.trim()){evidenceInput.focus();return;}
+    evidenceStep.hidden=true;evidenceResult.hidden=false;evidenceResult.focus();
+  });
+  guessInput.addEventListener('input',()=>{
+    const answer=guessInput.value.trim();
+    if(answer==='جاسر'||answer==='عمرو'){
+      guessStep.hidden=true;evidenceStep.hidden=false;
+      document.getElementById('evidenceInput').focus();
+    }
+  });
+  document.getElementById('showGuess').addEventListener('click',()=>showGuessView(true));
+  document.getElementById('showPeople').addEventListener('click',()=>showGuessView(false));
   const open=()=>{try{playLaser();}catch(e){} opener=document.activeElement;overlay.inert=false;overlay.setAttribute('aria-hidden','false');overlay.classList.add('open');document.getElementById('aboutClose').focus();};
   const close=()=>{try{playClick();}catch(e){} overlay.classList.remove('open');overlay.inert=true;overlay.setAttribute('aria-hidden','true');if(opener)opener.focus();};
   document.getElementById('aboutFab').addEventListener('click',()=>{
@@ -689,7 +739,12 @@ function renderContent(){
   addEventListener('keydown',e=>{
     if(!overlay.classList.contains('open'))return;
     if(e.key==='Escape')close();
-    if(e.key==='Tab'){e.preventDefault();document.getElementById('aboutClose').focus();}
+    if(e.key==='Tab'){
+      const focusable=Array.from(modal.querySelectorAll('button, input, textarea')).filter(el=>!el.closest('[hidden]'));
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+    }
   });
 })();
 
