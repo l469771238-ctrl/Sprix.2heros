@@ -401,6 +401,13 @@ body[data-active="fin"] .q-num{color:var(--green);}
   .disclaimer-box{max-width:700px;font-size:.95rem;}
 }
 
+/* عنوان التابلت في سطر واحد، بينما يظل الهاتف بسطرين */
+@media(min-width:521px) and (max-width:1399px){
+  .main-title{direction:ltr;}
+  .main-title .title-lines{display:block;white-space:nowrap;font-size:clamp(2rem,5vw,4.5rem);}
+  .main-title .title-lines .t-line1,.main-title .title-lines .t-line2{display:inline;font-size:inherit;}
+}
+
 @media(max-width:1024px){
   .platforms{grid-template-columns:repeat(2,1fr);}
   .pbtn{min-height:250px;}
@@ -426,8 +433,8 @@ body[data-active="fin"] .q-num{color:var(--green);}
 
 <div class="wrap">
   <h1 class="main-title">
-    <span class="t-line1">Z Answer models of</span>
-    <span class="t-line2">Sprix Platforms</span>
+    <span class="title-lines"><span class="t-line1">Z Answer models of</span>
+    <span class="t-line2">Sprix Platforms</span></span>
   </h1>
   <div class="home">
   <div class="platforms">
@@ -535,8 +542,14 @@ const DATA = {"js":{"title":"JavaScript","unit":"شابتر","units":{"1":[{"a":
 
 /* حافظ على سطري العنوان كما هما حتى في الشاشات الضيقة */
 function fitMainTitle(){
-  document.querySelectorAll('.main-title .t-line1, .main-title .t-line2').forEach(line=>{
-    line.style.fontSize='';
+  const title=document.querySelector('.main-title');
+  const lines=title.querySelector('.title-lines');
+  const parts=title.querySelectorAll('.t-line1, .t-line2');
+  lines.style.fontSize='';
+  parts.forEach(line=>line.style.fontSize='');
+  const tablet=matchMedia('(min-width: 521px) and (max-width: 1399px)').matches;
+  const targets=tablet?[lines]:parts;
+  targets.forEach(line=>{
     const available=line.clientWidth;
     if(available && line.scrollWidth>available){
       line.style.fontSize=`${parseFloat(getComputedStyle(line).fontSize)*available/line.scrollWidth*.98}px`;
@@ -589,6 +602,7 @@ $('backBtn').addEventListener('click',()=>{
   panel.style.display='none';
   homeEl.style.display='flex';
   document.querySelector('.main-title').style.display='';
+  fitMainTitle();
   document.querySelector('.disclaimer-box').style.display='';
   document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('active'));
   const previous=active;active=null;
