@@ -21,7 +21,6 @@
   src:url(assets/game-over.ttf) format('truetype');
   font-display:swap;
 }
-to{filter:drop-shadow(0 0 16px rgba(255,94,168,0.6)) drop-shadow(0 0 48px rgba(79,157,248,0.5));}}
 @media(max-width:520px){.site-title{font-size:clamp(1.15rem,6.5vw,1.8rem);padding:16px 6px 18px;}}
 
 
@@ -165,9 +164,8 @@ body[data-active="fin"] .q-num{color:var(--green);}
 .q-title{flex:1;font-size:1.02rem;font-weight:700;line-height:1.7;}
 .q-arrow{color:var(--muted);transition:transform .35s;flex-shrink:0;}
 .q.open .q-arrow{transform:rotate(180deg);}
-.q-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.22,1,.36,1);}
-.q.open .q-body{grid-template-rows:1fr;}
-.q-inner{min-height:0;overflow:hidden;}
+.q-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.22,1,.36,1);}
+.q.open .q-body{max-height:4000px;}
 .q-inner-content{padding:2px 18px 20px;}
 .q-question{color:var(--muted);font-size:.92rem;margin-bottom:10px;line-height:1.8;}
 .q-question b{color:var(--text);}
@@ -447,6 +445,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important;}
+  .portal-flower img{animation-duration:14s !important;animation-iteration-count:infinite !important;}
 }
 </style>
 </head>
