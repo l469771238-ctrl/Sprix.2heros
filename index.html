@@ -401,8 +401,8 @@ body[data-active="fin"] .q-num{color:var(--green);}
   .disclaimer-box{max-width:700px;font-size:.95rem;}
 }
 
-/* عنوان التابلت في سطر واحد، بينما يظل الهاتف بسطرين */
-@media(min-width:521px) and (max-width:1399px){
+/* العنوان في سطر واحد للتابلت بالعرض فقط، وبسطرين في الوضع الطولي والهاتف */
+@media (min-width:700px) and (max-width:1399px) and (min-height:600px) and (orientation:landscape){
   .main-title{direction:ltr;}
   .main-title .title-lines{display:block;white-space:nowrap;font-size:clamp(2rem,5vw,4.5rem);}
   .main-title .title-lines .t-line1,.main-title .title-lines .t-line2{display:inline;font-size:inherit;}
@@ -547,7 +547,7 @@ function fitMainTitle(){
   const parts=title.querySelectorAll('.t-line1, .t-line2');
   lines.style.fontSize='';
   parts.forEach(line=>line.style.fontSize='');
-  const tablet=matchMedia('(min-width: 521px) and (max-width: 1399px)').matches;
+  const tablet=matchMedia('(min-width: 700px) and (max-width: 1399px) and (min-height: 600px) and (orientation: landscape)').matches;
   const targets=tablet?[lines]:parts;
   targets.forEach(line=>{
     const available=line.clientWidth;
