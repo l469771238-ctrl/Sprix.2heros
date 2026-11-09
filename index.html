@@ -165,7 +165,6 @@ body[data-active="fin"] .q-num{color:var(--green);}
 .q-arrow{color:var(--muted);transition:transform .35s;flex-shrink:0;}
 .q.open .q-arrow{transform:rotate(180deg);}
 .q-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.22,1,.36,1);}
-.q.open .q-body{max-height:4000px;}
 .q-inner-content{padding:2px 18px 20px;}
 .q-question{color:var(--muted);font-size:.92rem;margin-bottom:10px;line-height:1.8;}
 .q-question b{color:var(--text);}
@@ -693,6 +692,19 @@ function selectUnit(u){
 /* ═══ عرض المحتوى ═══ */
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
+// قياس ارتفاع الإجابة الفعلي يحافظ على ظهور حركة الفتح والقفل كاملة.
+const answerResizeObserver=typeof ResizeObserver==='undefined'?null:new ResizeObserver(entries=>{
+  entries.forEach(entry=>{
+    const body=entry.target.parentElement;
+    if(body && body.parentElement.classList.contains('open'))body.style.maxHeight=body.scrollHeight+'px';
+  });
+});
+function updateAnswerHeight(q){
+  const body=q.querySelector('.q-body');
+  body.style.maxHeight=q.classList.contains('open')?body.scrollHeight+'px':'0px';
+}
+addEventListener('resize',()=>content.querySelectorAll('.q.open').forEach(updateAnswerHeight));
+
 function buildQ(num,title,question,answer,copyable,isText,crumb){
   const q=document.createElement('div');q.className='q';
   const head=document.createElement('button');head.type='button';head.className='q-head';head.setAttribute('aria-expanded','false');
@@ -719,19 +731,22 @@ function buildQ(num,title,question,answer,copyable,isText,crumb){
   }
   innerContent.appendChild(ans);inner.appendChild(innerContent);
   body.appendChild(inner);q.appendChild(body);
+  if(answerResizeObserver)answerResizeObserver.observe(inner);
   head.addEventListener('click',()=>{
     const was=q.classList.contains('open');
     q.parentElement.querySelectorAll('.q').forEach(x=>{
       x.classList.remove('open');
+      updateAnswerHeight(x);
       x.querySelector('.q-head').setAttribute('aria-expanded','false');
       x.querySelector('.q-body').inert=true;
     });
-    if(!was){q.classList.add('open');head.setAttribute('aria-expanded','true');body.inert=false;playPop();}
+    if(!was){q.classList.add('open');head.setAttribute('aria-expanded','true');body.inert=false;updateAnswerHeight(q);playPop();}
   });
   return q;
 }
 
 function renderContent(){
+  if(answerResizeObserver)answerResizeObserver.disconnect();
   content.innerHTML='';
   if(!active)return;
 
@@ -755,6 +770,7 @@ function renderContent(){
       const q=buildQ(i+1,`السؤال ${i+1}`,'',it.a,it.copy,it.t);
       if(n===1){q.classList.add('open');q.querySelector('.q-head').setAttribute('aria-expanded','true');q.querySelector('.q-body').inert=false;}
       content.appendChild(q);
+      if(n===1)updateAnswerHeight(q);
     });
   }
 }
