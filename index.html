@@ -752,7 +752,7 @@ entryForm.addEventListener('submit', function(event) {
     const parts = targetStyle.transform.match(/^matrix\(([^)]+)\)$/);
     const values = parts ? parts[1].split(',').map(Number) : [1, 0];
     const targetAngle = Math.atan2(values[1], values[0]) * 180 / Math.PI;
-    const canFly = sourceRect.width > 0 && targetWidth > 0 && targetHeight > 0;
+    const canFly = !reducedMotion && typeof original.animate === 'function' && sourceRect.width > 0 && targetWidth > 0 && targetHeight > 0;
     let flyer;
     if (canFly) {
       flyer = original.cloneNode();
@@ -778,7 +778,7 @@ entryForm.addEventListener('submit', function(event) {
       document.querySelector('.pbtn').focus({preventScroll:true});
       if (popContext) setTimeout(function() { popContext.close().catch(function() {}); }, 250);
     }
-    if (!canFly) { setTimeout(complete, reducedMotion ? 0 : 300); return; }
+    if (!canFly) { complete(); return; }
     const sourceX = sourceRect.left + sourceRect.width / 2 - targetWidth / 2;
     const sourceY = sourceRect.top + sourceRect.height / 2 - targetHeight / 2;
     const centerX = (window.innerWidth - targetWidth) / 2;
@@ -789,38 +789,15 @@ entryForm.addEventListener('submit', function(event) {
     const startTransform = `translate(${sourceX}px, ${sourceY}px) scale(${startScale})`;
     const middleTransform = `translate(${centerX}px, ${centerY}px) scale(${startScale * 2})`;
     const endTransform = `translate(${targetX}px, ${targetY}px) rotate(${targetAngle}deg)`;
-    const duration = reducedMotion ? 550 : 1400;
     try {
-      if (typeof flyer.animate === 'function') {
-        // Respect reduced-motion preferences by replacing the large flight with a brief fade.
-        const frames = reducedMotion ? [
-          {transform:endTransform, opacity:0},
-          {transform:endTransform, opacity:1}
-        ] : [
-          {transform:startTransform, offset:0},
-          {transform:middleTransform, offset:.38},
-          {transform:endTransform, offset:1}
-        ];
-        const animation = flyer.animate(frames, {duration, easing:'ease-in-out', fill:'forwards'});
-        if (animation.finished && typeof animation.finished.then === 'function') animation.finished.then(complete, complete);
-        else animation.onfinish = complete;
-      } else {
-        // CSS fallback for older tablet and interactive-board browsers without Web Animations.
-        flyer.style.transform = reducedMotion ? endTransform : startTransform;
-        flyer.style.opacity = reducedMotion ? '0' : '1';
-        const firstDuration = reducedMotion ? duration : Math.round(duration * .38);
-        flyer.style.transition = `transform ${firstDuration}ms ease-in-out, opacity ${firstDuration}ms ease-in-out`;
-        requestAnimationFrame(function() { requestAnimationFrame(function() {
-          flyer.style.transform = reducedMotion ? endTransform : middleTransform;
-          flyer.style.opacity = '1';
-          if (!reducedMotion) setTimeout(function() {
-            flyer.style.transition = `transform ${duration - firstDuration}ms ease-in-out`;
-            flyer.style.transform = endTransform;
-          }, firstDuration);
-          setTimeout(complete, duration + 80);
-        }); });
-      }
-      setTimeout(complete, duration + 600); // Never leave the page locked if animation is interrupted.
+      const animation = flyer.animate([
+        {transform:startTransform, offset:0},
+        {transform:middleTransform, offset:.38},
+        {transform:endTransform, offset:1}
+      ], {duration:1400, easing:'ease-in-out', fill:'forwards'});
+      if (animation.finished && typeof animation.finished.then === 'function') animation.finished.then(complete, complete);
+      else animation.onfinish = complete;
+      setTimeout(complete, 2000); // Never leave the page locked if animation is interrupted.
     } catch (error) { complete(); }
     });
   }
