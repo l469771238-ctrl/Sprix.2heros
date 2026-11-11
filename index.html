@@ -256,7 +256,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
   background:linear-gradient(160deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03));
   border:1px solid rgba(255,255,255,0.16);border-radius:26px;
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  padding:46px 36px 40px;overflow:hidden;
+  padding:46px 36px 40px;max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);overflow-y:auto;
   box-shadow:0 24px 70px rgba(0,0,0,0.55),0 0 44px rgba(45,255,126,0.1),inset 0 1px 0 rgba(255,255,255,0.12);
   transform:scale(0.86) translateY(22px);transition:transform .42s cubic-bezier(.22,1,.36,1);}
 .about-overlay.open .about-modal{transform:scale(1) translateY(0);}
@@ -264,7 +264,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
   width:260px;height:150px;border-radius:50%;
   background:radial-gradient(ellipse,rgba(45,255,126,0.22),transparent 70%);
   filter:blur(12px);pointer-events:none;}
-.about-title{font-family:'Khaybar 3D','Amiri',serif;font-size:clamp(2rem,6vw,2.9rem);font-weight:700;
+.about-title{font-family:'Khaybar 3D','Amiri',serif;font-size:clamp(2rem,6vw,2.9rem);font-weight:700;overflow-wrap:anywhere;
   margin-bottom:24px;line-height:1.4;
   background:linear-gradient(90deg,#2dff7e,#4f9df8 60%,#c792ea);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
@@ -279,7 +279,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
   border-radius:16px;padding:18px 20px;margin:0 2px;}
 .about-person .p-name{font-family:'Zain',sans-serif;font-size:1.35rem;font-weight:900;
   color:#2dff7e;filter:drop-shadow(0 0 10px rgba(45,255,126,0.35));}
-.about-person:last-of-type .p-name{color:#4f9df8;filter:drop-shadow(0 0 10px rgba(79,157,248,0.35));}
+.about-person.person-blue .p-name{color:#4f9df8;filter:drop-shadow(0 0 10px rgba(79,157,248,0.35));}
 .about-person .p-role{color:#c6d4e8;font-family:'Zain',sans-serif;font-size:.98rem;line-height:1.7;}
 .collab-wrap{display:flex;flex-direction:column;align-items:center;margin:2px 0;}
 .collab-line{width:2px;height:24px;
@@ -526,9 +526,18 @@ body[data-active="fin"] .q-num{color:var(--green);}
       <div class="about-collab">بالتعاون مع</div>
       <span class="collab-line down"></span>
     </div>
-    <div class="about-person">
+    <div class="about-person person-blue">
       <span class="p-name">العميل ج.ج</span>
       <span class="p-role">مؤسس شركة Data X و المدير القائم على منصة Qworld</span>
+    </div>
+    <div class="collab-wrap">
+      <span class="collab-line"></span>
+      <div class="about-collab">بالتعاون مع</div>
+      <span class="collab-line down"></span>
+    </div>
+    <div class="about-person">
+      <span class="p-name">العميلة ي.م</span>
+      <span class="p-role">مصممة جرافيك لمجالات:<br><span dir="ltr">*Brand Identity Design</span><br><span dir="ltr">*Motion Graphics</span></span>
     </div>
     <button type="button" class="about-next" id="showGuess" aria-label="انتقل إلى من أنت؟"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></button>
     </div>
@@ -537,7 +546,7 @@ body[data-active="fin"] .q-num{color:var(--green);}
       <div id="guessStep">
         <p class="guess-description">لو انت في نفس مدارسنا خمّن أسماءنا صح و اكسب هدية!!</p>
         <input class="guess-input" id="guessInput" type="text" placeholder="اكتب اللي تعرفه" aria-label="اكتب اللي تعرفه" aria-describedby="guessError" autocomplete="off">
-        <p class="guess-error" id="guessError" role="status" hidden>الاسم مش صحيح، جرّب تاني.</p>
+        <p class="guess-error" id="guessError" role="status" hidden>اكتب الاسم الأول.</p>
         <button type="button" class="guess-submit" id="submitGuess">تأكيد الاسم</button>
       </div>
       <div id="evidenceStep" hidden>
@@ -799,7 +808,8 @@ function renderContent(){
   const guessError=document.getElementById('guessError');
   function submitGuess(){
     const answer=guessInput.value.trim();
-    if(answer==='جاسر'||answer==='عمرو'){
+    if(answer){
+      document.getElementById('guessTitle').textContent=`اشمعنا ${answer} ؟`;
       guessError.hidden=true;guessStep.hidden=true;evidenceStep.hidden=false;evidenceInput.focus();
     }else{
       guessError.hidden=false;guessInput.focus();
